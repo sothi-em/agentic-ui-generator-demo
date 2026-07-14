@@ -2,6 +2,24 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+
+class ComponentRequest(BaseModel):
+    message: str = Field(..., min_length=1, description="User prompt for the agent")
+    component: dict | None = Field(
+        None,
+        description=(
+            "Optional existing component context (name, description, appJsx, indexCss) "
+            "if the user is editing an existing component."
+        ),
+    )
+
+
+class ComponentResponse(BaseModel):
+    jsx: str
+    css: str
+
 
 app = FastAPI(
     title="Agentic UI Generator Demo",
@@ -34,6 +52,17 @@ async def version():
         "name": "agentic-ui-generator-demo",
         "version": "0.1.0",
     }
+
+
+@app.post("/api/generate")
+async def generate_component(request: ComponentRequest) -> ComponentResponse:
+    from utils.generator import generate_ui_component
+
+    result = await generate_ui_component(
+        request.message,
+        existing_component=request.component,
+    )
+    return ComponentResponse(jsx=result["jsx"], css=result["css"])
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 import { useState, useCallback } from "react";
-import { cn } from "@/utils/cn";
 import { AppHeader } from "@/components/AppHeader";
 import { LayoutBar } from "@/components/LayoutBar";
 import { LeftPanel } from "@/components/LeftPanel";
 import { MainArea } from "@/components/MainArea";
-import { ChatPanel } from "@/components/ChatPanel";
+import { ComponentEditor } from "@/components/ComponentEditor";
+import { ComponentProvider } from "@/stores/componentStore";
 
-export function DashboardPage() {
+function DashboardLayout() {
   const [showLeft, setShowLeft] = useState(true);
   const [showRight, setShowRight] = useState(true);
 
@@ -23,19 +23,27 @@ export function DashboardPage() {
 
       {/* Three-panel layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left panel */}
+        {/* Left panel — component list */}
         {showLeft && <LeftPanel />}
 
         {/* Main area */}
         <MainArea />
 
-        {/* Right panel — agent chat */}
+        {/* Right panel — component settings */}
         {showRight && (
-          <div className="w-[512px] flex-shrink-0 border-l border-zinc-200 dark:border-zinc-700">
-            <ChatPanel />
+          <div className="w-[400px] flex-shrink-0 border-l border-zinc-200 dark:border-zinc-700">
+            <ComponentEditor />
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+export function DashboardPage() {
+  return (
+    <ComponentProvider>
+      <DashboardLayout />
+    </ComponentProvider>
   );
 }

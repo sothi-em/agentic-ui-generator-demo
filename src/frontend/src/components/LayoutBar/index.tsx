@@ -60,8 +60,8 @@ export function LayoutBar({
         />
         <ToolbarButton
           icon={PanelRight}
-          label="Right Panel"
-          tooltip="Toggle right panel"
+          label="Settings"
+          tooltip="Toggle settings panel"
           onClick={onToggleRight}
         />
       </div>
