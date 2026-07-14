@@ -18,7 +18,7 @@ src/
     vite.config.ts                  # Vite config with @ alias + API proxy
     tsconfig.json                   # TypeScript with @/* paths
     tsconfig.node.json              # Node.js tsconfig
-    tailwind.config.js              # TailwindCSS with HSL theme variables
+    tailwind.config.js              # TailwindCSS with oklch theme variables
     postcss.config.js               # PostCSS config
     index.html                      # Vite entry HTML
     src/
@@ -28,11 +28,18 @@ src/
       vite-env.d.ts                 # Vite type declarations
       api/
         client.ts                   # Axios API client
-      components/                   # Reusable UI components
-      pages/                        # Page components
+      components/
+        AppHeader/                  # Top application header (branding, theme toggle)
+        LayoutBar/                  # Utility toolbar (canvas actions, panel toggles)
+        LeftPanel/                  # Left panel — component browser (blank stub)
+        MainArea/                   # Center canvas area
+        ChatPanel/                  # Right panel — agent chat interface
+      pages/
+        Dashboard/                  # Dashboard page — three-panel layout
       stores/                       # State management (if needed)
       types/                        # TypeScript type definitions
-      utils/                        # Utility functions
+      utils/
+        cn.ts                       # clsx + tailwind-merge utility
       styles/                       # Additional styles
 ```
 
@@ -66,16 +73,24 @@ cd src/frontend && pnpm build
 
 ### Frontend — Vite + React + TypeScript + TailwindCSS
 
+**Dashboard Layout:** Three-panel layout mirroring the Diagram Builder pattern:
+- `AppHeader` — Top bar with branding and theme toggle
+- `LayoutBar` — Utility toolbar with canvas actions and panel toggles
+- `LeftPanel` — Component browser (blank stub)
+- `MainArea` — Center canvas area
+- `ChatPanel` — Agent chat interface (right panel)
+
 **TypeScript Path Aliases:** `@/*` maps to `src/frontend/src/*` (configured in `tsconfig.json` and `vite.config.ts`).
 
 **Dev Server:** Vite dev server on port 3000 with proxy — `/api/*` requests are proxied to FastAPI at `localhost:8000`.
 
-**Styling:** TailwindCSS with CSS custom properties (HSL variables) for theming. Dark mode via `class` strategy.
+**Styling:** TailwindCSS with oklch color space CSS custom properties for theming. Dark mode via `class` strategy. Same color system as pretty-diagram reference.
 
 ## Key Patterns
 
 - **`@/` path alias** in both tsconfig.json and vite.config.ts
 - **Proxy-based dev setup** — Vite proxies `/api/*` to FastAPI
-- **HSL theme variables** — dark mode via CSS custom properties
+- **oklch theme variables** — dark mode via CSS custom properties
+- **Three-panel layout** — Left | Main | Right panels with toggleable visibility
 - **pnpm** as the frontend package manager
 - **uv** as the Python package manager

@@ -1,9 +1,5 @@
-import { HomePage } from "./pages/HomePage";
+import { DashboardPage } from "./pages/Dashboard";
 
 export default function App() {
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <HomePage />
-    </div>
-  );
+  return <DashboardPage />;
 }
