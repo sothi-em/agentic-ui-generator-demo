@@ -6,6 +6,10 @@ A proof-of-concept full-stack application that lets users generate interactive d
 
 Designed as a workflow demo for user-generated dashboard elements and persistent data visualization. Built for rapid development and showcase rather than production hardening.
 
+[Generating Simple Table](https://github.com/user-attachments/assets/9e364b11-1f77-4cc0-9c62-8e02c4dea6d4)
+
+[Adding Sort Functionality](https://github.com/user-attachments/assets/b21961e3-9740-476c-8d9e-81297fd685e9)
+
 ## Architecture
 
 - **Frontend** — React 19 dashboard with a chat-based editor, live preview sandbox, and JSON data viewer.
