@@ -109,6 +109,7 @@ export function ComponentEditor() {
       }
     } finally {
       setIsSending(false);
+      setMessage("");
     }
   }, [message, isSending, selectedId, selectedComponent, updateComponent, addHistoryEntry]);
 

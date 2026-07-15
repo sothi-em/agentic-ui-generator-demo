@@ -18,10 +18,12 @@ def _build_system_prompt(
     base_instruction = (
         "Do not attempt to use any tools, as there are none available except StructuredOutput. "
         "You are a specialized UI component generator. Your job is to output exactly one App.jsx "
-        "file with self-contained CSS styling. "
+        "file with self-contained CSS styling. Pay attention to not include any ts syntax."
         "Use only the builtin standard library and styling. You MUST name the JSX function App "
         "and use this signature: export default function App(). "
         "Before outputting the JSX file, make sure the syntax is correct."
+        "Do not include any stub test data unless the user specifies."
+        "Always include this line: import items from './data.json';"
     )
 
     context_section = ""
