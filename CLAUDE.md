@@ -1,96 +1,73 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
+## Project
 
-## Project Overview
-
-**Agentic UI Generator Demo** — a full-stack demo application for dynamically generating dashboard UI components via a chat interface. React + Vite frontend, FastAPI + Python 3.12 backend managed by uv.
-
-## Repository Layout
-
-```
-src/
-  backend/                         # FastAPI backend (Python 3.12 + uv)
-    pyproject.toml                  # uv-managed dependencies
-    main.py                         # FastAPI app entry point
-  frontend/                          # Vite + React + TypeScript + TailwindCSS
-    package.json                    # pnpm-managed
-    vite.config.ts                  # Vite config with @ alias + API proxy
-    tsconfig.json                   # TypeScript with @/* paths
-    tsconfig.node.json              # Node.js tsconfig
-    tailwind.config.js              # TailwindCSS with oklch theme variables
-    postcss.config.js               # PostCSS config
-    index.html                      # Vite entry HTML
-    src/
-      main.tsx                      # React entry point
-      App.tsx                       # Root app component
-      index.css                     # TailwindCSS + CSS custom properties
-      vite-env.d.ts                 # Vite type declarations
-      api/
-        client.ts                   # Axios API client
-      components/
-        AppHeader/                  # Top application header (branding, theme toggle)
-        LayoutBar/                  # Utility toolbar (canvas actions, panel toggles)
-        LeftPanel/                  # Left panel — component browser (blank stub)
-        MainArea/                   # Center canvas area
-        ChatPanel/                  # Right panel — agent chat interface
-      pages/
-        Dashboard/                  # Dashboard page — three-panel layout
-      stores/                       # State management (if needed)
-      types/                        # TypeScript type definitions
-      utils/
-        cn.ts                       # clsx + tailwind-merge utility
-      styles/                       # Additional styles
-```
-
-## Commands
-
-```bash
-# Backend development
-cd src/backend
-uv sync
-uv run uvicorn main:app --reload --port 8000
-
-# Frontend development
-cd src/frontend
-pnpm install
-pnpm dev
-
-# Frontend production build
-cd src/frontend && pnpm build
-```
+**Agentic UI Generator Demo** — full-stack app for dynamically generating React dashboard components from natural-language prompts. React 19 + Vite frontend, FastAPI backend powered by Claude Agent SDK.
 
 ## Architecture
 
-### Backend — FastAPI
+### Backend — FastAPI + Claude Agent SDK (`src/backend/`)
 
-**Flat structure:** Single `main.py` with FastAPI app, CORS middleware, and health/version endpoints. Managed by `uv` with `pyproject.toml`.
+Flat layout. Python 3.12, managed by **uv** via `pyproject.toml`.
 
-**API Endpoints:**
-- `GET /` — Root health check
-- `GET /api/health` — API health status
-- `GET /api/version` — Version info
+| File | Role |
+|---|---|
+| `agentServer.py` | FastAPI app — CORS middleware, health/version endpoints, `POST /api/generate`; uvicorn entry point |
+| `utils/generator.py` | Claude Agent SDK workflow — async `generate_ui_component()` using `query()` with structured JSON output |
 
-### Frontend — Vite + React + TypeScript + TailwindCSS
+`POST /api/generate` accepts a `ComponentRequest` (message + optional existing component context) and returns `{"jsx": "..."}`. The generator uses a JSON-schema-constrained Claude Agent SDK call with all tools disabled for safety.
 
-**Dashboard Layout:** Three-panel layout mirroring the Diagram Builder pattern:
-- `AppHeader` — Top bar with branding and theme toggle
-- `LayoutBar` — Utility toolbar with canvas actions and panel toggles
-- `LeftPanel` — Component browser (blank stub)
-- `MainArea` — Center canvas area
-- `ChatPanel` — Agent chat interface (right panel)
+```bash
+# Start backend
+cd src/backend && uv sync && uv run uvicorn agentServer:app --reload --port 8000
+```
 
-**TypeScript Path Aliases:** `@/*` maps to `src/frontend/src/*` (configured in `tsconfig.json` and `vite.config.ts`).
+### Frontend — Vite + React 19 + TypeScript + TailwindCSS (`src/frontend/`)
 
-**Dev Server:** Vite dev server on port 3000 with proxy — `/api/*` requests are proxied to FastAPI at `localhost:8000`.
+```
+src/frontend/
+  package.json                          # pnpm; React 19, Sandpack, axios, lucide-react, tailwind-merge
+  vite.config.ts                        # @ alias, proxy /api → localhost:8000
+  tsconfig.json                         # @/* → src/
+  tailwind.config.js                   # oklch CSS custom properties, darkMode: "class"
+  postcss.config.js
+  index.html
+  src/
+    main.tsx                            # ReactDOM entry, StrictMode
+    App.tsx                             # Root — renders DashboardPage
+    index.css                           # Tailwind + oklch theme variables (light/dark)
+    vite-env.d.ts                       # Vite type declarations
+    api/client.ts                       # Axios instance (baseURL: "/api")
+    components/
+      AppHeader/                        # Top bar — branding, theme toggle (dark/light)
+      LayoutBar/                        # Toolbar — Save, Open, Delete, panel toggles
+      LeftPanel/                        # Component list — add/select components with revision badges
+      ComponentEditor/                  # Right panel — name/description fields, interaction history, chat input → POST /api/generate
+      BottomPanel/                      # JSON file viewer — load/display JSON data for Sandpack preview
+    pages/Dashboard/                    # Main layout — Header + LayoutBar + [LeftPanel | Sandpack-preview | ComponentEditor] + BottomPanel
+    stores/componentStore.tsx           # React context store — components CRUD, selection, history, loaded JSON files
+    types/component.ts                 # UiComponent + ComponentHistoryEntry interfaces
+    utils/cn.ts                        # clsx + tailwind-merge helper
+```
 
-**Styling:** TailwindCSS with oklch color space CSS custom properties for theming. Dark mode via `class` strategy. Same color system as pretty-diagram reference.
+```bash
+# Start frontend
+cd src/frontend && pnpm install && pnpm dev
+```
 
-## Key Patterns
+### Data Flow
 
-- **`@/` path alias** in both tsconfig.json and vite.config.ts
-- **Proxy-based dev setup** — Vite proxies `/api/*` to FastAPI
-- **oklch theme variables** — dark mode via CSS custom properties
-- **Three-panel layout** — Left | Main | Right panels with toggleable visibility
-- **pnpm** as the frontend package manager
-- **uv** as the Python package manager
+1. User types a prompt in **ComponentEditor** (right panel)
+2. Frontend `POST /api/generate` → FastAPI proxies to Claude Agent SDK
+3. Agent returns JSX → frontend updates the selected component's `appJsx` in the store
+4. **Sandpack** live-renders the JSX in the center area, with optional JSON data from **BottomPanel**
+5. Each interaction is recorded as a history entry on the component
+
+### Key Patterns
+
+- **`@/` path alias** in `tsconfig.json` and `vite.config.ts`
+- **Vite proxy** — `/api/*` routes to FastAPI at `localhost:8000`
+- **oklch dark mode** — CSS custom properties, `class` strategy
+- **Component store** — React context + `useCallback`-memoized actions; no external state library
+- **pnpm** (frontend) / **uv** (backend) as package managers
+- **Sandpack** — Codesandbox's in-browser React playground for live component preview
