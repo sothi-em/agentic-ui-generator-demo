@@ -1,4 +1,5 @@
 """Agentic UI Generator Demo - FastAPI Backend"""
+import asyncio
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -55,12 +56,14 @@ async def version():
 
 
 @app.post("/api/generate")
-async def generate_component(request: ComponentRequest) -> ComponentResponse:
+def generate_component(request: ComponentRequest) -> ComponentResponse:
     from utils.generator import generate_ui_component
 
-    result = await generate_ui_component(
-        request.message,
-        existing_component=request.component,
+    result = asyncio.run(
+        generate_ui_component(
+            request.message,
+            existing_component=request.component,
+        )
     )
     return ComponentResponse(jsx=result["jsx"], css=result["css"])
 
@@ -68,4 +71,4 @@ async def generate_component(request: ComponentRequest) -> ComponentResponse:
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("agentServer:app", host="0.0.0.0", port=8000, reload=True)
