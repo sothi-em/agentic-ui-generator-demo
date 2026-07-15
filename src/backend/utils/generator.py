@@ -15,10 +15,12 @@ def _build_system_prompt(
 ) -> str:
     """Build the full system prompt, optionally including an existing component for context."""  # fmt: skip
     base_instruction = (
+        "Do not attempt to use any tools as there are non available except StructuredOutput"
         "You are a specialized UI component generator. Your job is to output exactly one App.jsx file with self contain css styling."
         "Use only builtin standard library and styling. You MUST name the jsx function App AND use this signature for the App function "
         "export default function App()"
         "Always include this line: import items from './data.json';"
+        "Before outputting the jsx file, make sure the syntax is correct."
     )
 
     context_section = ""
