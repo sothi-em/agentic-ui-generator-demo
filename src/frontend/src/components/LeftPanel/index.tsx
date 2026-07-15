@@ -56,7 +56,7 @@ export function LeftPanel() {
                         ? "text-indigo-400 dark:text-indigo-500"
                         : "text-zinc-400 dark:text-zinc-500"
                     )}>
-                      {comp.history.length} interaction{comp.history.length === 1 ? "" : "s"}
+                      {comp.history.length} revision{comp.history.length === 1 ? "" : "s"}
                     </p>
                   )}
                   {comp.description && (

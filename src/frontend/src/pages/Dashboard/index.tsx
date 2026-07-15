@@ -155,7 +155,7 @@ function DashboardLayout() {
           {selectedComponent && hasCode && (
             <SandpackProvider template="react" className="flex-1 flex flex-col h-full" files={{ "/App.js": selectedComponent.appJsx!, "/data.json": JSON.stringify(selectedData, null, 2) }} theme="light">
               <SandpackLayout className="flex-1 !flex !flex-col h-full !border-0 !rounded-none [&>div]:flex-1 [&>div]:h-full [&_iframe]:h-full">
-                <SandpackPreview className="flex-1 h-full" style={{ height: "100%" }}/>
+                <SandpackPreview className="flex-1 h-full" style={{ height: "100%" }} showOpenInCodeSandbox={false}/>
               </SandpackLayout>
             </SandpackProvider>
           )}
