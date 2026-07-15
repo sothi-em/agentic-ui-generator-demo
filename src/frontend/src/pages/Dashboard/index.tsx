@@ -6,14 +6,20 @@ import { ComponentEditor } from "@/components/ComponentEditor";
 import { BottomPanel } from "@/components/BottomPanel";
 import { ComponentProvider, useComponentStore } from "@/stores/componentStore";
 import {SandpackLayout, SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
+import { useMemo } from "react";
 
 function DashboardLayout() {
   const [showLeft, setShowLeft] = useState(true);
   const [showRight, setShowRight] = useState(true);
 
-  const { components, selectedId } = useComponentStore();
+  const { components, selectedId, dataFiles, selectedDataFileId } = useComponentStore();
   const selectedComponent = components.find((c) => c.id === selectedId);
   const hasCode = (selectedComponent?.appJsx?.trim().length ?? 0) > 0;
+
+  const selectedData = useMemo(() => {
+    const file = dataFiles.find((f) => f.id === selectedDataFileId);
+    return file?.data ?? [];
+  }, [dataFiles, selectedDataFileId]);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -83,7 +89,7 @@ function DashboardLayout() {
           )}
 
           {selectedComponent && hasCode && (
-            <SandpackProvider template="react" className="flex-1 flex flex-col h-full" files={{ "/App.js": selectedComponent.appJsx! }} theme="light">
+            <SandpackProvider template="react" className="flex-1 flex flex-col h-full" files={{ "/App.js": selectedComponent.appJsx!, "/data.json": JSON.stringify(selectedData, null, 2) }} theme="light">
               <SandpackLayout className="flex-1 !flex !flex-col h-full !border-0 !rounded-none [&>div]:flex-1 [&>div]:h-full [&_iframe]:h-full">
                 <SandpackPreview className="flex-1 h-full" style={{ height: "100%" }}/>
               </SandpackLayout>
