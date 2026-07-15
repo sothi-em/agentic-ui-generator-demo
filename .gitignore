@@ -7,7 +7,6 @@ src/frontend/tsconfig.tsbuildinfo
 # Python
 *.pyc
 __pycache__/
-*.pyc
 .venv/
 uv.lock
 

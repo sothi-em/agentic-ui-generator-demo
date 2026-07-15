@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useMemo } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { LayoutBar } from "@/components/LayoutBar";
 import { LeftPanel } from "@/components/LeftPanel";
@@ -6,8 +7,8 @@ import { ComponentEditor } from "@/components/ComponentEditor";
 import { BottomPanel } from "@/components/BottomPanel";
 import { ComponentProvider, useComponentStore } from "@/stores/componentStore";
 import { type UiComponent } from "@/types/component";
-import {SandpackLayout, SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
-import { useMemo } from "react";
+import { SandpackLayout, SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
+import { ArrowRight, Plus } from "lucide-react";
 
 function DashboardLayout() {
   const [showLeft, setShowLeft] = useState(true);
@@ -100,19 +101,7 @@ function DashboardLayout() {
             <div className="flex-1 flex items-center justify-center p-4">
               <div className="text-center">
                 <div className="w-12 h-12 rounded-xl bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center mx-auto mb-3">
-                  <svg
-                    className="w-6 h-6 text-zinc-400 dark:text-zinc-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25M12 17.25V6.75"
-                    />
-                  </svg>
+                  <ArrowRight className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
                 </div>
                 <p className="text-sm text-zinc-400 dark:text-zinc-500 font-medium">
                   Select a component to preview
@@ -128,19 +117,7 @@ function DashboardLayout() {
             <div className="flex-1 flex items-center justify-center p-4">
               <div className="text-center">
                 <div className="w-12 h-12 rounded-xl bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center mx-auto mb-3">
-                  <svg
-                    className="w-6 h-6 text-zinc-400 dark:text-zinc-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
+                  <Plus className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
                 </div>
                 <p className="text-sm text-zinc-400 dark:text-zinc-500 font-medium">
                   No components yet

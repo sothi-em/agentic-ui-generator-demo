@@ -1,5 +1,4 @@
 """Agentic UI Generator Demo - FastAPI Backend"""
-import asyncio
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -54,14 +53,12 @@ async def version():
 
 
 @app.post("/api/generate")
-def generate_component(request: ComponentRequest) -> ComponentResponse:
+async def generate_component(request: ComponentRequest) -> ComponentResponse:
     from utils.generator import generate_ui_component
 
-    result = asyncio.run(
-        generate_ui_component(
-            request.message,
-            existing_component=request.component,
-        )
+    result = await generate_ui_component(
+        request.message,
+        existing_component=request.component,
     )
     return ComponentResponse(jsx=result["jsx"])
 

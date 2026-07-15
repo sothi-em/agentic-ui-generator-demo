@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
 import { Sun, Moon, Workflow } from "lucide-react";
+import { useState } from "react";
 import { cn } from "@/utils/cn";
 
 interface AppHeaderProps {
@@ -9,7 +9,7 @@ interface AppHeaderProps {
 export function AppHeader({ className }: AppHeaderProps) {
   const [dark, setDark] = useState(false);
 
-  const toggleTheme = useCallback(() => {
+  const toggleTheme = () => {
     setDark((prev) => {
       const next = !prev;
       if (next) {
@@ -19,7 +19,7 @@ export function AppHeader({ className }: AppHeaderProps) {
       }
       return next;
     });
-  }, []);
+  };
 
   return (
     <header

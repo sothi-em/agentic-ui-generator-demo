@@ -1,8 +1,8 @@
 """UI component generation workflow using Claude Agent SDK."""
-import json
-from typing import Any, Dict
 import asyncio
-from claude_agent_sdk import ClaudeAgentOptions, query, tool, ResultMessage
+from typing import Dict
+
+from claude_agent_sdk import ClaudeAgentOptions, query, ResultMessage
 from pydantic import BaseModel, Field
 
 
@@ -10,17 +10,18 @@ from pydantic import BaseModel, Field
 class UIComponentResponse(BaseModel):
     jsx: str = Field(description="The complete, modern, and responsive JSX code for the component.")
 
+
 def _build_system_prompt(
     existing_component: dict | None = None
 ) -> str:
     """Build the full system prompt, optionally including an existing component for context."""  # fmt: skip
     base_instruction = (
-        "Do not attempt to use any tools as there are non available except StructuredOutput"
-        "You are a specialized UI component generator. Your job is to output exactly one App.jsx file with self contain css styling."
-        "Use only builtin standard library and styling. You MUST name the jsx function App AND use this signature for the App function "
-        "export default function App()"
-        "Always include this line: import items from './data.json';"
-        "Before outputting the jsx file, make sure the syntax is correct."
+        "Do not attempt to use any tools, as there are none available except StructuredOutput. "
+        "You are a specialized UI component generator. Your job is to output exactly one App.jsx "
+        "file with self-contained CSS styling. "
+        "Use only the builtin standard library and styling. You MUST name the JSX function App "
+        "and use this signature: export default function App(). "
+        "Before outputting the JSX file, make sure the syntax is correct."
     )
 
     context_section = ""
@@ -56,9 +57,6 @@ async def generate_ui_component(
     dict
         ``{"jsx": "..."}`` with the generated file contents.
     """
-    global _generated_files
-    _generated_files = {"jsx": ""}
-
     system_prompt = _build_system_prompt(existing_component)
 
     options = ClaudeAgentOptions(

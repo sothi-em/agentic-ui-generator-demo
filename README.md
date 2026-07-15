@@ -5,7 +5,7 @@ Demo of using a chat interface to dynamically generate dashboard UI components.
 ## Tech Stack
 
 - **Backend:** Python 3.12 + FastAPI (managed by uv)
-- **Frontend:** React + TypeScript + TailwindCSS (Vite, managed by pnpm)
+- **Frontend:** React 19 + TypeScript + TailwindCSS (Vite, managed by pnpm)
 
 ## Getting Started
 
@@ -14,7 +14,7 @@ Demo of using a chat interface to dynamically generate dashboard UI components.
 ```bash
 cd src/backend
 uv sync
-uv run uvicorn main:app --reload --port 8000
+uv run uvicorn agentServer:app --reload --port 8000
 ```
 
 ### Frontend
