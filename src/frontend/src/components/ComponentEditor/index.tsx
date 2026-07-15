@@ -43,7 +43,6 @@ export function ComponentEditor() {
           name: selectedComponent.name,
           description: selectedComponent.description,
           appJsx: selectedComponent.appJsx,
-          indexCss: selectedComponent.indexCss,
         };
       }
 
@@ -53,7 +52,6 @@ export function ComponentEditor() {
       if (selectedId && response.data?.jsx) {
         updateComponent(selectedId, {
           appJsx: response.data.jsx,
-          indexCss: response.data.css ?? selectedComponent?.indexCss ?? "",
         });
       }
     } catch (err) {

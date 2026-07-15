@@ -9,18 +9,15 @@ from pydantic import BaseModel, Field
 # Define the structured output schema
 class UIComponentResponse(BaseModel):
     jsx: str = Field(description="The complete, modern, and responsive JSX code for the component.")
-    css: str = Field(description="The corresponding CSS code containing animations and layout styles.")
-
 
 def _build_system_prompt(
     existing_component: dict | None = None
 ) -> str:
     """Build the full system prompt, optionally including an existing component for context."""  # fmt: skip
     base_instruction = (
-        "You are a specialized UI component generator. Your job is to output exactly one JSX file "
-        "and one corresponding CSS file. Once they are ready, you MUST call the `return_component_files` "
-        "tool with both string payloads. Do not attempt to use any other file-writing tools."
-        "Use only builtin standard library and styling. You MUST name the jsx function App."
+        "You are a specialized UI component generator. Your job is to output exactly one App.jsx file with self contain css styling."
+        "Use only builtin standard library and styling. You MUST name the jsx function App AND use this signature for the App function "
+        "export default function App()"
     )
 
     context_section = ""
@@ -54,10 +51,10 @@ async def generate_ui_component(
     Returns
     -------
     dict
-        ``{"jsx": "...", "css": "..."}`` with the generated file contents.
+        ``{"jsx": "..."}`` with the generated file contents.
     """
     global _generated_files
-    _generated_files = {"jsx": "", "css": ""}
+    _generated_files = {"jsx": ""}
 
     system_prompt = _build_system_prompt(existing_component)
 
@@ -81,24 +78,19 @@ async def generate_ui_component(
             final_response = message.structured_output
     if final_response:
         return {
-            "jsx": final_response.get("jsx", ""),
-            "css": final_response.get("css", "")
+            "jsx": final_response.get("jsx", "")
         }
 
-    return {"jsx": "", "css": ""}
+    return {"jsx": ""}
 
 
 # --- Example Usage ---
 async def main():
-    prompt = "Display a list of current directory files and content."
+    prompt = "Give me a blue button that when click turn into a red button"
     files = await generate_ui_component(prompt)
 
     print("--- GENERATED JSX ---")
     print(files["jsx"])
-
-    print("\n--- GENERATED CSS ---")
-    print(files["css"])
-
 
 if __name__ == "__main__":
     asyncio.run(main())

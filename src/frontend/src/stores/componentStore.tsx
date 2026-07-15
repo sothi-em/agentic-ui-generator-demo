@@ -5,7 +5,7 @@ interface ComponentStoreContextValue {
   components: UiComponent[];
   selectedId: string | null;
   selectComponent: (id: string) => void;
-  updateComponent: (id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx" | "indexCss">>) => void;
+  updateComponent: (id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx">>) => void;
   addComponent: () => void;
 }
 
@@ -17,7 +17,6 @@ const defaultComponents: UiComponent[] = [
     name: "Sample Card",
     description: "A sample card component for demonstration",
     appJsx: "",
-    indexCss: "",
   },
 ];
 
@@ -29,7 +28,7 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
     setSelectedId(id);
   }, []);
 
-  const updateComponent = useCallback((id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx" | "indexCss">>) => {
+  const updateComponent = useCallback((id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx">>) => {
     setComponents((prev) =>
       prev.map((c) => (c.id === id ? { ...c, ...updates } : c))
     );
@@ -41,7 +40,6 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
       name: "Untitled",
       description: "",
       appJsx: "",
-      indexCss: "",
     };
     setComponents((prev) => [...prev, newComponent]);
     setSelectedId(newComponent.id);

@@ -19,8 +19,6 @@ class ComponentRequest(BaseModel):
 
 class ComponentResponse(BaseModel):
     jsx: str
-    css: str
-
 
 app = FastAPI(
     title="Agentic UI Generator Demo",
@@ -65,7 +63,7 @@ def generate_component(request: ComponentRequest) -> ComponentResponse:
             existing_component=request.component,
         )
     )
-    return ComponentResponse(jsx=result["jsx"], css=result["css"])
+    return ComponentResponse(jsx=result["jsx"])
 
 
 if __name__ == "__main__":

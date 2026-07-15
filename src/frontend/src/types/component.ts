@@ -3,5 +3,4 @@ export interface UiComponent {
   name: string;
   description: string;
   appJsx: string;
-  indexCss: string;
 }
