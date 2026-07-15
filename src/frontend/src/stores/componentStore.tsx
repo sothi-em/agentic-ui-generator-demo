@@ -104,7 +104,7 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
   }, [selectedDataFileId]);
 
   const selectDataFile = useCallback((id: string) => {
-    setSelectedDataFileId(id);
+    setSelectedDataFileId((prev) => (prev === id ? null : id));
   }, []);
 
   return (
