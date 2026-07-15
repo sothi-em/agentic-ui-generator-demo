@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import { type UiComponent } from "@/types/component";
+import { type UiComponent, type ComponentHistoryEntry } from "@/types/component";
 
 export interface LoadedFile {
   id: string;
@@ -14,6 +14,7 @@ interface ComponentStoreContextValue {
   selectComponent: (id: string) => void;
   updateComponent: (id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx">>) => void;
   addComponent: () => void;
+  addHistoryEntry: (componentId: string, entry: Omit<ComponentHistoryEntry, "id" | "timestamp">) => void;
   dataFiles: LoadedFile[];
   selectedDataFileId: string | null;
   addDataFile: (file: LoadedFile) => void;
@@ -29,6 +30,7 @@ const defaultComponents: UiComponent[] = [
     name: "Sample Card",
     description: "A sample card component for demonstration",
     appJsx: "",
+    history: [],
   },
 ];
 
@@ -54,9 +56,20 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
       name: "Untitled",
       description: "",
       appJsx: "",
+      history: [],
     };
     setComponents((prev) => [...prev, newComponent]);
     setSelectedId(newComponent.id);
+  }, []);
+
+  const addHistoryEntry = useCallback((componentId: string, entry: Omit<ComponentHistoryEntry, "id" | "timestamp">) => {
+    setComponents((prev) =>
+      prev.map((c) =>
+        c.id === componentId
+          ? { ...c, history: [...c.history, { ...entry, id: crypto.randomUUID(), timestamp: new Date() }] }
+          : c
+      )
+    );
   }, []);
 
   const addDataFile = useCallback((file: LoadedFile) => {
@@ -81,7 +94,7 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
 
   return (
     <ComponentStoreContext.Provider
-      value={{ components, selectedId, selectComponent, updateComponent, addComponent, dataFiles, selectedDataFileId, addDataFile, removeDataFile, selectDataFile }}
+      value={{ components, selectedId, selectComponent, updateComponent, addComponent, addHistoryEntry, dataFiles, selectedDataFileId, addDataFile, removeDataFile, selectDataFile }}
     >
       {children}
     </ComponentStoreContext.Provider>

@@ -1,9 +1,5 @@
 import { cn } from "@/utils/cn";
 import {
-  Layers,
-  Component,
-  Settings,
-  Plus,
   Save,
   Copy,
   Trash2,
@@ -25,28 +21,10 @@ export function LayoutBar({
   return (
     <div
       className={cn(
-        "h-[40px] flex items-center justify-between px-3 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950",
+        "h-[40px] flex items-center px-3 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950",
         className
       )}
     >
-      <div className="flex items-center gap-1">
-        <ToolbarButton
-          icon={Layers}
-          label="Canvas"
-          tooltip="Canvas controls"
-        />
-        <ToolbarButton
-          icon={Component}
-          label="Components"
-          tooltip="Component palette"
-        />
-        <ToolbarButton
-          icon={Plus}
-          label="New"
-          tooltip="Add component"
-        />
-      </div>
-
       <div className="flex items-center gap-1">
         <ToolbarButton icon={Save} label="Save" tooltip="Save changes" />
         <ToolbarButton icon={Copy} label="Copy" tooltip="Copy to clipboard" />
