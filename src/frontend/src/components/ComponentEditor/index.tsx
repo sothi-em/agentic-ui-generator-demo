@@ -9,11 +9,13 @@ function CollapsibleSection({
   label,
   icon,
   defaultOpen = false,
+  count,
   children,
 }: {
   label: string;
   icon?: React.ReactNode;
   defaultOpen?: boolean;
+  count?: number;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -31,6 +33,9 @@ function CollapsibleSection({
         )}
         {icon && <span className="flex-shrink-0">{icon}</span>}
         <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">{label}</span>
+        {count !== undefined && (
+          <span className="text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">{count}</span>
+        )}
       </button>
       {open && <div className="px-3 pb-3">{children}</div>}
     </div>
@@ -66,7 +71,6 @@ export function ComponentEditor() {
     const trimmed = message.trim();
     if (!trimmed || isSending) return;
 
-    setMessage("");
     setIsSending(true);
 
     try {
@@ -175,7 +179,11 @@ export function ComponentEditor() {
               onKeyDown={handleKeyDown}
               placeholder="Describe what to build..."
               rows={4}
-              className="flex-1 bg-transparent resize-none outline-none text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 max-h-24 overflow-y-auto"
+              className={cn(
+                "flex-1 bg-transparent resize-none outline-none text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 max-h-24 overflow-y-auto",
+                isSending && "cursor-wait opacity-60"
+              )}
+              disabled={isSending}
             />
             <button
               onClick={handleSend}
@@ -217,8 +225,9 @@ function HistorySection({ history }: { history: ComponentHistoryEntry[] }) {
 
   return (
     <CollapsibleSection
-      label={`Interaction History (${history.length})`}
+      label="Interaction History"
       defaultOpen={false}
+      count={history.length}
       icon={<MessageSquare className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />}
     >
       {history.length === 0 ? (

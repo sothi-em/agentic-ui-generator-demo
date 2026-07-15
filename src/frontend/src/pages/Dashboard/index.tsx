@@ -14,7 +14,7 @@ function DashboardLayout() {
   const [showRight, setShowRight] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { components, selectedId, dataFiles, selectedDataFileId, replaceComponents } = useComponentStore();
+  const { components, selectedId, dataFiles, selectedDataFileId, replaceComponents, deleteComponent } = useComponentStore();
 
   const handleSave = async () => {
     const json = JSON.stringify(components, null, 2);
@@ -50,6 +50,12 @@ function DashboardLayout() {
     fileInputRef.current?.click();
   };
 
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteComponent(selectedId);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -81,7 +87,7 @@ function DashboardLayout() {
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <AppHeader />
-      <LayoutBar onSave={handleSave} onOpen={handleOpen} onToggleLeft={() => setShowLeft((p) => !p)} onToggleRight={() => setShowRight((p) => !p)} />
+      <LayoutBar onSave={handleSave} onOpen={handleOpen} onDelete={handleDelete} onToggleLeft={() => setShowLeft((p) => !p)} onToggleRight={() => setShowRight((p) => !p)} />
       <input ref={fileInputRef} type="file" accept=".json" className="hidden" onChange={handleFileChange} />
 
       {/* Top section — main workspace */}
@@ -137,10 +143,10 @@ function DashboardLayout() {
                   </svg>
                 </div>
                 <p className="text-sm text-zinc-400 dark:text-zinc-500 font-medium">
-                  No code yet
+                  No components yet
                 </p>
                 <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
-                  Generate code using the editor on the right
+                  Generate UI components with the prompt on the right.
                 </p>
               </div>
             </div>

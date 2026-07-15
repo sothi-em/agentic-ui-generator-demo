@@ -14,6 +14,9 @@ export function LeftPanel() {
           <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
             Components
           </span>
+          <span className="text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">
+            {components.length}
+          </span>
         </div>
         <button
           onClick={addComponent}
@@ -46,6 +49,16 @@ export function LeftPanel() {
                   )}
                 >
                   <p className="text-sm font-medium truncate">{comp.name}</p>
+                  {comp.history.length > 0 && (
+                    <p className={cn(
+                      "text-[10px] tabular-nums mt-0.5 truncate",
+                      selectedId === comp.id
+                        ? "text-indigo-400 dark:text-indigo-500"
+                        : "text-zinc-400 dark:text-zinc-500"
+                    )}>
+                      {comp.history.length} interaction{comp.history.length === 1 ? "" : "s"}
+                    </p>
+                  )}
                   {comp.description && (
                     <p className={cn(
                       "text-xs mt-0.5 truncate",

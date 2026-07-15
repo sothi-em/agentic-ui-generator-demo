@@ -14,6 +14,7 @@ interface ComponentStoreContextValue {
   selectComponent: (id: string) => void;
   updateComponent: (id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx">>) => void;
   addComponent: () => void;
+  deleteComponent: (id: string) => void;
   replaceComponents: (components: UiComponent[]) => void;
   addHistoryEntry: (componentId: string, entry: Omit<ComponentHistoryEntry, "id" | "timestamp">) => void;
   dataFiles: LoadedFile[];
@@ -25,18 +26,8 @@ interface ComponentStoreContextValue {
 
 const ComponentStoreContext = createContext<ComponentStoreContextValue | null>(null);
 
-const defaultComponents: UiComponent[] = [
-  {
-    id: "1",
-    name: "Sample Card",
-    description: "A sample card component for demonstration",
-    appJsx: "",
-    history: [],
-  },
-];
-
 export function ComponentProvider({ children }: { children: ReactNode }) {
-  const [components, setComponents] = useState(defaultComponents);
+  const [components, setComponents] = useState<UiComponent[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [dataFiles, setDataFiles] = useState<LoadedFile[]>([]);
   const [selectedDataFileId, setSelectedDataFileId] = useState<string | null>(null);
@@ -62,6 +53,16 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
     setComponents((prev) => [...prev, newComponent]);
     setSelectedId(newComponent.id);
   }, []);
+
+  const deleteComponent = useCallback((id: string) => {
+    setComponents((prev) => {
+      const newComponents = prev.filter((c) => c.id !== id);
+      if (selectedId === id) {
+        setSelectedId(newComponents.length > 0 ? newComponents[0].id : null);
+      }
+      return newComponents;
+    });
+  }, [selectedId]);
 
   const replaceComponents = useCallback((newComponents: UiComponent[]) => {
     const normalized = newComponents.map((c) => ({
@@ -108,7 +109,7 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
 
   return (
     <ComponentStoreContext.Provider
-      value={{ components, selectedId, selectComponent, updateComponent, addComponent, replaceComponents, addHistoryEntry, dataFiles, selectedDataFileId, addDataFile, removeDataFile, selectDataFile }}
+      value={{ components, selectedId, selectComponent, updateComponent, addComponent, deleteComponent, replaceComponents, addHistoryEntry, dataFiles, selectedDataFileId, addDataFile, removeDataFile, selectDataFile }}
     >
       {children}
     </ComponentStoreContext.Provider>
