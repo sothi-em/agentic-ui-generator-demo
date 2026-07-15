@@ -3,6 +3,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { LayoutBar } from "@/components/LayoutBar";
 import { LeftPanel } from "@/components/LeftPanel";
 import { ComponentEditor } from "@/components/ComponentEditor";
+import { BottomPanel } from "@/components/BottomPanel";
 import { ComponentProvider, useComponentStore } from "@/stores/componentStore";
 import {SandpackLayout, SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 
@@ -19,7 +20,8 @@ function DashboardLayout() {
       <AppHeader />
       <LayoutBar onToggleLeft={() => setShowLeft((p) => !p)} onToggleRight={() => setShowRight((p) => !p)} />
 
-      <div className="flex-1 flex overflow-hidden">
+      {/* Top section — main workspace */}
+      <div className="flex-[2] flex overflow-hidden min-h-0">
         {showLeft && <LeftPanel />}
 
         {/* Main area — inline */}
@@ -94,6 +96,11 @@ function DashboardLayout() {
             <ComponentEditor />
           </div>
         )}
+      </div>
+
+      {/* Bottom panel — JSON file viewer */}
+      <div className="flex-[1] min-h-0 border-t border-zinc-200 dark:border-zinc-700">
+        <BottomPanel />
       </div>
     </div>
   );

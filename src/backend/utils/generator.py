@@ -18,6 +18,7 @@ def _build_system_prompt(
         "You are a specialized UI component generator. Your job is to output exactly one App.jsx file with self contain css styling."
         "Use only builtin standard library and styling. You MUST name the jsx function App AND use this signature for the App function "
         "export default function App()"
+        "Always include this line: import items from './data.json';"
     )
 
     context_section = ""
