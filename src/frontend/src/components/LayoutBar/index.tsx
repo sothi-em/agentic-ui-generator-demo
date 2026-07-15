@@ -1,6 +1,7 @@
 import { cn } from "@/utils/cn";
 import {
   Save,
+  FolderOpen,
   Copy,
   Trash2,
   PanelLeft,
@@ -9,12 +10,16 @@ import {
 
 interface LayoutBarProps {
   className?: string;
+  onSave?: () => void;
+  onOpen?: () => void;
   onToggleLeft?: () => void;
   onToggleRight?: () => void;
 }
 
 export function LayoutBar({
   className,
+  onSave,
+  onOpen,
   onToggleLeft,
   onToggleRight,
 }: LayoutBarProps) {
@@ -26,7 +31,8 @@ export function LayoutBar({
       )}
     >
       <div className="flex items-center gap-1">
-        <ToolbarButton icon={Save} label="Save" tooltip="Save changes" />
+        <ToolbarButton icon={Save} label="Save" tooltip="Save changes" onClick={onSave} />
+        <ToolbarButton icon={FolderOpen} label="Open" tooltip="Open from file" onClick={onOpen} />
         <ToolbarButton icon={Copy} label="Copy" tooltip="Copy to clipboard" />
         <ToolbarButton icon={Trash2} label="Delete" tooltip="Delete selected" />
         <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-700 mx-1" />

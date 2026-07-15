@@ -14,6 +14,7 @@ interface ComponentStoreContextValue {
   selectComponent: (id: string) => void;
   updateComponent: (id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx">>) => void;
   addComponent: () => void;
+  replaceComponents: (components: UiComponent[]) => void;
   addHistoryEntry: (componentId: string, entry: Omit<ComponentHistoryEntry, "id" | "timestamp">) => void;
   dataFiles: LoadedFile[];
   selectedDataFileId: string | null;
@@ -62,6 +63,19 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
     setSelectedId(newComponent.id);
   }, []);
 
+  const replaceComponents = useCallback((newComponents: UiComponent[]) => {
+    const normalized = newComponents.map((c) => ({
+      ...c,
+      history: c.history.map((entry) => ({
+        ...entry,
+        timestamp:
+          entry.timestamp instanceof Date ? entry.timestamp : new Date(entry.timestamp as unknown as string),
+      })),
+    }));
+    setComponents(normalized);
+    setSelectedId(normalized.length > 0 ? normalized[0].id : null);
+  }, []);
+
   const addHistoryEntry = useCallback((componentId: string, entry: Omit<ComponentHistoryEntry, "id" | "timestamp">) => {
     setComponents((prev) =>
       prev.map((c) =>
@@ -94,7 +108,7 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
 
   return (
     <ComponentStoreContext.Provider
-      value={{ components, selectedId, selectComponent, updateComponent, addComponent, addHistoryEntry, dataFiles, selectedDataFileId, addDataFile, removeDataFile, selectDataFile }}
+      value={{ components, selectedId, selectComponent, updateComponent, addComponent, replaceComponents, addHistoryEntry, dataFiles, selectedDataFileId, addDataFile, removeDataFile, selectDataFile }}
     >
       {children}
     </ComponentStoreContext.Provider>
