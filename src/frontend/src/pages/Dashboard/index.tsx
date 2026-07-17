@@ -78,7 +78,7 @@ function DashboardLayout() {
     e.target.value = "";
   };
   const selectedComponent = components.find((c) => c.id === selectedId);
-  const hasCode = (selectedComponent?.appJsx?.trim().length ?? 0) > 0;
+  const hasCode = (selectedComponent?.appTsx?.trim().length ?? 0) > 0;
 
   const selectedData = useMemo(() => {
     const file = dataFiles.find((f) => f.id === selectedDataFileId);
@@ -130,7 +130,7 @@ function DashboardLayout() {
           )}
 
           {selectedComponent && hasCode && (
-            <SandpackProvider template="react" className="flex-1 flex flex-col h-full" files={{ "/App.js": selectedComponent.appJsx!, "/data.json": JSON.stringify(selectedData, null, 2) }} theme="light">
+            <SandpackProvider template="react-ts" className="flex-1 flex flex-col h-full" files={{ "/App.tsx": selectedComponent.appTsx!, "/data.json": JSON.stringify(selectedData, null, 2) }} theme="light">
               <SandpackLayout className="flex-1 !flex !flex-col h-full !border-0 !rounded-none [&>div]:flex-1 [&>div]:h-full [&_iframe]:h-full">
                 <SandpackPreview className="flex-1 h-full" style={{ height: "100%" }} showOpenInCodeSandbox={false}/>
               </SandpackLayout>

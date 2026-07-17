@@ -11,14 +11,14 @@ class ComponentRequest(BaseModel):
     component: dict | None = Field(
         None,
         description=(
-            "Optional existing component context (name, description, appJsx, indexCss) "
+            "Optional existing component context (name, description, appTsx, indexCss) "
             "if the user is editing an existing component."
         ),
     )
 
 
 class ComponentResponse(BaseModel):
-    jsx: str
+    tsx: str
 
 app = FastAPI(
     title="Agentic UI Generator Demo",
@@ -63,7 +63,7 @@ def generate_component(request: ComponentRequest) -> ComponentResponse:
             existing_component=request.component,
         )
     )
-    return ComponentResponse(jsx=result["jsx"])
+    return ComponentResponse(tsx=result["tsx"])
 
 
 if __name__ == "__main__":

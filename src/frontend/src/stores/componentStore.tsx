@@ -12,7 +12,7 @@ interface ComponentStoreContextValue {
   components: UiComponent[];
   selectedId: string | null;
   selectComponent: (id: string) => void;
-  updateComponent: (id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx">>) => void;
+  updateComponent: (id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appTsx">>) => void;
   addComponent: () => void;
   deleteComponent: (id: string) => void;
   replaceComponents: (components: UiComponent[]) => void;
@@ -36,7 +36,7 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
     setSelectedId(id);
   }, []);
 
-  const updateComponent = useCallback((id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appJsx">>) => {
+  const updateComponent = useCallback((id: string, updates: Partial<Pick<UiComponent, "name" | "description" | "appTsx">>) => {
     setComponents((prev) =>
       prev.map((c) => (c.id === id ? { ...c, ...updates } : c))
     );
@@ -47,7 +47,7 @@ export function ComponentProvider({ children }: { children: ReactNode }) {
       id: crypto.randomUUID(),
       name: "Untitled",
       description: "",
-      appJsx: "",
+      appTsx: "",
       history: [],
     };
     setComponents((prev) => [...prev, newComponent]);

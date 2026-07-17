@@ -79,16 +79,16 @@ export function ComponentEditor() {
         payload.component = {
           name: selectedComponent.name,
           description: selectedComponent.description,
-          appJsx: selectedComponent.appJsx,
+          appTsx: selectedComponent.appTsx,
         };
       }
 
       const response = await apiClient.post("/generate", payload);
 
       // If we got a response with generated files, update the selected component
-      if (selectedId && response.data?.jsx) {
+      if (selectedId && response.data?.tsx) {
         updateComponent(selectedId, {
-          appJsx: response.data.jsx,
+          appTsx: response.data.tsx,
         });
       }
 
